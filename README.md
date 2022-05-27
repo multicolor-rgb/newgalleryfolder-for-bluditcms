@@ -6,7 +6,7 @@ This very easy plugin create gallery from upload photos
 
 Put this code on your template where you want to show gallery
 
-<code><?php Theme::plugins('showgallery') ?>
+<code>&lt;?php Theme::plugins('showgallery') ?&gt;
 </code>
 
 ##What next?
