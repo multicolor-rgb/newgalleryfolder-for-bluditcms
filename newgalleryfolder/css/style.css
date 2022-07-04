@@ -17,13 +17,22 @@
 
 @media(max-width:960px){
 
+    .newGalleryFolder{
+        display: grid !important;
+        grid-template-columns:1fr !important;
+
+    }
+
     .newGalleryFolder a{
         width: 100% !important;
         display:block;
+         
     }
 
     .newGalleryFolder img{
         width:100% !important;
-      height:150px;     
+      height: 100% !important;    
+      object-fit: cover !important; 
+      object-position: center center !important;
     }
 }
