@@ -5,11 +5,12 @@
 
 class newGalleryFolder extends Plugin {
 
+ 
 
     public function init()
 	{
 		$this->dbFields = array(
-			'label'=>'Static Pages',
+			'label'=>'',
 			'slugpages'=>'',
             'widththumb'=>'',
             'heightthumb'=>'',
@@ -17,6 +18,10 @@ class newGalleryFolder extends Plugin {
             'columngallery'=>'',
             'showautomatic'=>'',
             'showall'=>'',
+            'border'=>'0px',
+            'bordercolor'=>'#fff',
+            'hover'=>'',
+            'thumbnailsfolder'=>'',
 		);
 
         $this->customHooks = array(
@@ -26,62 +31,81 @@ class newGalleryFolder extends Plugin {
 
 	}
 
+    public function adminBodyEnd(){
+        if($this->getValue('showautomatic')=='paste'){
+        echo '<script src="'.$this->domainPath().'js/buttonAdder.js"></script>';
+    } 
+
+    }
+
 
  
 
     public function siteHead() {
         echo '<link rel="stylesheet" href="'.$this->domainPath().'css/glightbox.min.css">';
         echo '<link rel="stylesheet" href="'.$this->domainPath().'css/style.css?v=3">';
+
+   
+
     }
+
+   
 
     public function siteBodyEnd() {
         echo '<script src="'.$this->domainPath().'js/glightbox.min.js"></script>';
         echo '<script src="'.$this->domainPath().'js/script.js"></script>';
 
+        if($this->getValue('showautomatic')=='paste'){
 
-     
+        echo "<script>if(document.querySelector('.new-gal-tinymce')!==null){
+
+            const nge = document.querySelector('.new-gal-tinymce');
+            const ngf = document.querySelector('.newGalleryFolder');
+            
+            document.querySelector('.new-gal-tinymce').outerHTML = `<div class='new-gal-tinymce'></div>`;
+            document.querySelector('.new-gal-tinymce').append(ngf);
+            
+            }</script>";
+
+        };
+
     }
  
+ 
 
-
-
-
-
-
-    public function showgallery()
-    {
+    public function showgallery(){
 
         $countx=0;
 
+        if($this->getValue('showautomatic')=='disable'){
         global $page;
         $sluger = $page->slug();
        $valueslugpages = $this->getValue('slugpages');
        $pageId = $page->uuid();
 
-        if(strpos($this->getValue('slugpages'), $sluger) !== false){
+
+       if($this->getvalue('showall')=='all'){
+       include($this->phpPath().'php/newGalleryFunction.php');
+       };
+
+
+
 
      
- 
-            $allPage = '.'.HTML_PATH_UPLOADS_PAGES.$pageId.'';
-        
-          
-            echo '<div class="newGalleryFolder" style="width:100%;display:grid;grid-template-columns:repeat('.$this->getValue('columngallery').',1fr);grid-gap:'.$this->getValue('gapgallery').';">';
-            foreach(glob($allPage."/*.{jpg,png,jpeg,gif,bmp}", GLOB_BRACE) as $file)
-         
-            if($file != '.' && $file != '..'&& $file != '' ){
-            $thumb = str_replace('.'.$allPage.'/',$allPage.'/thumbnails.',$file);
-            echo'';
-            echo '<a href="'.DOMAIN.$file.'" class="glightbox" data-gallery="gallery1">';
-            echo'<img src="'.DOMAIN.$thumb.'"  style="max-width:100%;width:'.$this->getValue('widththumb').';height:'.$this->getValue('heightthumb').';display:block;object-fit:cover;object-position:center center;"  alt="'.$sluger.'-'.$countx.'"/>';  
-            echo'</a>';  
-            $countx++;
-            };
-            echo'</div>';
+       if($this->getvalue('showall')=='chosen'){
+        if(strpos($this->getValue('slugpages'), $sluger) !== false){
+        include($this->phpPath().'php/newGalleryFunction.php');
+         }
+        };
+
+
+        }
+
 
     }
 
- 
-    }
+
+   
 
     //frontautomatic
 
@@ -89,7 +113,19 @@ class newGalleryFolder extends Plugin {
 
 
         public function pageBegin(){
+
             $countx=0;
+
+            if($this->getValue('showautomatic')=='paste'){
+                global $page;
+                $sluger = $page->slug();
+               $valueslugpages = $this->getValue('slugpages');
+               $pageId = $page->uuid();
+        
+                include($this->phpPath().'php/newGalleryFunction.php');
+             }
+
+       
 
             if($this->getValue('showautomatic')=='begin'){
             global $page;
@@ -102,51 +138,21 @@ class newGalleryFolder extends Plugin {
 
   
            if($this->getvalue('showall')=='all'){
-    
-         
-                $allPage = '.'.HTML_PATH_UPLOADS_PAGES.$pageId.'';
-        
-          
-              echo '<div class="newGalleryFolder" style="width:100%;display:grid;grid-template-columns:repeat('.$this->getValue('columngallery').',1fr);grid-gap:'.$this->getValue('gapgallery').';">';
-              foreach(glob($allPage."/*.{jpg,png,jpeg,gif,bmp}", GLOB_BRACE) as $file)
-           
-              if($file != '.' && $file != '..'&& $file != '' ){
-              $thumb = str_replace('.'.$allPage.'/',$allPage.'/thumbnails.',$file);
-              echo'';
-              echo '<a href="'.DOMAIN.$file.'" class="glightbox" data-gallery="gallery1">';
-              echo'<img src="'.DOMAIN.$thumb.'"  style="max-width:100%;width:'.$this->getValue('widththumb').';height:'.$this->getValue('heightthumb').';display:block;object-fit:cover;object-position:center center;"  alt="'.$sluger.'-'.$countx.'"/>';  
-              echo'</a>';  
-              $countx++;
-              };
-              echo'</div>';
-            
-            
+
+            include($this->phpPath().'php/newGalleryFunction.php');
+
            };
 
 
+       
 
 
          
            if($this->getvalue('showall')=='chosen'){
             if(strpos($this->getValue('slugpages'), $sluger) !== false){
-    
-         
-                $allPage = '.'.HTML_PATH_UPLOADS_PAGES.$pageId.'';
-        
-          
-                echo '<div class="newGalleryFolder" style="width:100%;display:grid;grid-template-columns:repeat('.$this->getValue('columngallery').',1fr);grid-gap:'.$this->getValue('gapgallery').';">';
-                foreach(glob($allPage."/*.{jpg,png,jpeg,gif,bmp}", GLOB_BRACE) as $file)
-             
-                if($file != '.' && $file != '..'&& $file != '' ){
-                $thumb = str_replace('.'.$allPage.'/',$allPage.'/thumbnails.',$file);
-                echo'';
-                echo '<a href="'.DOMAIN.$file.'" class="glightbox" data-gallery="gallery1">';
-                echo'<img src="'.DOMAIN.$thumb.'"  style="max-width:100%;width:'.$this->getValue('widththumb').';height:'.$this->getValue('heightthumb').';display:block;object-fit:cover;object-position:center center;"  alt="'.$sluger.'-'.$countx.'"/>';  
-                echo'</a>'; 
-                $countx++; 
-                };
-                echo'</div>';
-               
+
+                include($this->phpPath().'php/newGalleryFunction.php');
+
              }
            };
 
@@ -166,25 +172,9 @@ class newGalleryFolder extends Plugin {
     
  
            if($this->getvalue('showall')=='all'){
-    
-         
-            $allPage = '.'.HTML_PATH_UPLOADS_PAGES.$pageId.'';
-        
-          
-            echo '<div class="newGalleryFolder" style="width:100%;display:grid;grid-template-columns:repeat('.$this->getValue('columngallery').',1fr);grid-gap:'.$this->getValue('gapgallery').';">';
-            foreach(glob($allPage."/*.{jpg,png,jpeg,gif,bmp}", GLOB_BRACE) as $file)
-      
-            if($file != '.' && $file != '..'&& $file != '' ){
-            $thumb = str_replace('.'.$allPage.'/',$allPage.'/thumbnails.',$file);
-            echo'';
-            echo '<a href="'.DOMAIN.$file.'" class="glightbox" data-gallery="gallery1">';
-            echo'<img src="'.DOMAIN.$thumb.'"  style="max-width:100%;width:'.$this->getValue('widththumb').';height:'.$this->getValue('heightthumb').';display:block;object-fit:cover;object-position:center center;"  alt="'.$sluger.'-'.$countx.'"/>';  
-            echo'</a>';  
-            $countx++;
-            };
-            echo'</div>';
-        
-        
+  
+            include($this->phpPath().'php/newGalleryFunction.php');
+
        };
 
 
@@ -194,23 +184,8 @@ class newGalleryFolder extends Plugin {
        if($this->getvalue('showall')=='chosen'){
         if(strpos($this->getValue('slugpages'), $sluger) !== false){
 
-     
-            $allPage = '.'.HTML_PATH_UPLOADS_PAGES.$pageId.'';
-        
-          
-            echo '<div class="newGalleryFolder" style="width:100%;display:grid;grid-template-columns:repeat('.$this->getValue('columngallery').',1fr);grid-gap:'.$this->getValue('gapgallery').';">';
-            foreach(glob($allPage."/*.{jpg,png,jpeg,gif,bmp}", GLOB_BRACE) as $file)
-            
-            if($file != '.' && $file != '..'&& $file != '' ){
-            $thumb = str_replace('.'.$allPage.'/',$allPage.'/thumbnails.',$file);
-            echo'';
-            echo '<a href="'.DOMAIN.$file.'" class="glightbox" data-gallery="gallery1">';
-            echo'<img src="'.DOMAIN.$thumb.'"  style="max-width:100%;width:'.$this->getValue('widththumb').';height:'.$this->getValue('heightthumb').';display:block;object-fit:cover;object-position:center center;"  alt="'.$sluger.'-'.$countx.'"/>';  
-            echo'</a>';  
-            $countx++;
-            };
-            echo'</div>';
-            
+            include($this->phpPath().'php/newGalleryFunction.php');
+ 
          }
        };
 
@@ -270,6 +245,8 @@ class newGalleryFolder extends Plugin {
 <option value="disable" '.($this->getValue('showautomatic')==="disable"?"selected":"").'>show only with function in template</option>
 <option value="begin" '.($this->getValue('showautomatic')==="begin"?"selected":"").'>Begin on page content</option>
 <option value="end" '.($this->getValue('showautomatic')==="end"?"selected":"").'>End of page content</option>
+<option value="paste" '.($this->getValue('showautomatic')==="paste"?"selected":"").'>Can add inside tinymce</option>
+
         </select>
         ';
 
@@ -279,6 +256,9 @@ class newGalleryFolder extends Plugin {
         $html .= '<label>height thumbnails</label>';
 		$html .= '<input type="text" name="heightthumb" placeholder="300px" value="'.$this->getValue('heightthumb').'">';
 
+
+      
+        
         
         $html .= '<label>gap gallery</label>';
 		$html .= '<input type="text" name="gapgallery" placeholder="20px" value="'.$this->getValue('gapgallery').'">';
@@ -287,6 +267,37 @@ class newGalleryFolder extends Plugin {
         $html .= '<label>column gallery</label>';
 		$html .= '<input type="text" name="columngallery" placeholder="1-10" value="'.$this->getValue('columngallery').'">';
 
+
+
+        $html .= '<div class="bg-light border mt-4 p-3"><h4>Thumbnails Settings</h4><label>Border thumbnails</label>';
+		$html .= '<input type="text" name="border" placeholder="20px" class="form-control" value="'.$this->getValue('border').'">';
+
+        $html .= '<label>Border color thumbnails</label>';
+		$html .= '<input type="color" name="bordercolor" class="form-control form-color" placeholder="20px" value="'.$this->getValue('bordercolor').'">';
+
+
+        $html .='
+        <label>Hover effect</label>
+        <select name="hover">
+<option value="off" '.($this->getValue('hover')==="off"?"selected":"").'>no effect</option>
+<option value="light" '.($this->getValue('hover')==="light"?"selected":"").'>light effect</option>
+<option value="dark" '.($this->getValue('hover')==="dark"?"selected":"").'>dark effect</option>
+        </select>
+
+        <br>
+
+        <p>Choose thumbnails generated (original thumbnails from bludit, or generated from plugin)</p>
+        <select name="thumbnailsfolder">
+       <option value="automatic" '.($this->getValue('thumbnailsfolder')==="automatic"?"selected":"").'>Thumbnails automatic (larger size)</option>
+       <option value="bludit" '.($this->getValue('thumbnailsfolder')==="bludit"?"selected":"").'>Thumbails from bludit</option>
+        </select>
+
+        </div>
+        ';
+
+ 
+
+        
         $html .= '
         
        
