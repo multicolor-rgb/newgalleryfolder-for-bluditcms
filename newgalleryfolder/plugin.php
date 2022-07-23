@@ -21,11 +21,11 @@ class newGalleryFolder extends Plugin {
             'border'=>'0px',
             'bordercolor'=>'#fff',
             'hover'=>'',
-            'thumbnailsfolder'=>'',
+            'thumbnailsfolder'=>''
 		);
 
         $this->customHooks = array(
-            'showgallery',
+            'showgallery'
            
         );
 
@@ -164,7 +164,7 @@ class newGalleryFolder extends Plugin {
        public function pageEnd(){
         $countx=0;
             
-    if($this->getValue('showautomatic')==='end'){
+        if($this->getValue('showautomatic')=='end'){
             global $page;
             $sluger = $page->slug();
            $valueslugpages = $this->getValue('slugpages');

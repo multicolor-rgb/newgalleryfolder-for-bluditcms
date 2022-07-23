@@ -52,8 +52,10 @@ if($this->getValue('hover')=='dark'){
                 $thumb = str_replace('./bl-content/uploads/pages/'.$pageId.'/','/bl-content/uploads/pages/'.$pageId.'/',$file);
             }
 
+            $fileNew = str_replace('./','/',$file);
+
         echo'';
-        echo '<a href="'.DOMAIN.$file.'" class="glightbox" data-gallery="gallery1">';
+        echo '<a href="'.DOMAIN.  $fileNew.'" class="glightbox" data-gallery="gallery1">';
         echo'<img src="'.DOMAIN.$thumb.'"  class="newgallery-foto" style="max-width:100%;width:'.$this->getValue('widththumb').';height:'.$this->getValue('heightthumb').';display:block;object-fit:cover;object-position:center center;"  alt="'.$sluger.'-'.$countx.'"/>';  
         echo'</a>';  
         $countx++;
